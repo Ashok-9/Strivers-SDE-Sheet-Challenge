@@ -13,4 +13,4 @@ def pascalTriangle(n):
     for c in range(1, n+1):
         print(nCr(n-1, c-1), end=" ")
     print()
-
+#example
