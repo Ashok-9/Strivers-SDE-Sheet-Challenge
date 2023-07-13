@@ -1,29 +1,36 @@
-import heapq
+from collections import deque
 
-def rank_people(N, P, ranked_weights, unranked_weights):
-    
-    # Sort the ranked and unranked weights in the required order
-    ranked_weights.sort(reverse=True)
-    unranked_weights.sort()
+def printLevelByLevel(graph, start):
+    visited = set()
+    queue = deque([start])
 
-    # Initialize the priority queue and next rank
-    pq = []
-    next_rank = N + 1
+    while queue:
+        level_size = len(queue)
 
-    # Insert the ranked people into the priority queue
-    for weight in ranked_weights:
-        heapq.heappush(pq, (weight, next_rank))
-        next_rank -= 1
+        for _ in range(level_size):
+            node = queue.popleft()
 
-    # Rank the unranked people and print their ranks
-    for weight in unranked_weights:
-        heapq.heappush(pq, (weight, next_rank))
-        print(next_rank)
-        next_rank -= 1
+           # Print the node at the current level
 
-N, P = map(int, input().split())
-ranked_weights = list(map(int, input().split()))
-unranked_weights = list(map(int, input().split()))
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)  
+                    visited.add(neighbor)# Enqueue neighboring nodes
 
-# Call the rank_people function
-rank_people(N, P, ranked_weights, unranked_weights)
+        print("Level Separator")  # Print a separator between levels
+
+
+# Example usage
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+startNode = 'A'
+
+print("Printing level by level:")
+printLevelByLevel(graph, startNode)
