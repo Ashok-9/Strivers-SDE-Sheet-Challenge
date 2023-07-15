@@ -1,36 +1,49 @@
-from collections import deque
+def lcs(s1, s2):
+    n = len(s1)
+    m = len(s2)
 
-def printLevelByLevel(graph, start):
-    visited = set()
-    queue = deque([start])
+    dp = [[0 for j in range(m + 1)] for i in range(n + 1)]
+    for i in range(n + 1):
+        dp[i][0] = 0
+    for i in range(m + 1):
+        dp[0][i] = 0
 
-    while queue:
-        level_size = len(queue)
+    for ind1 in range(1, n + 1):
+        for ind2 in range(1, m + 1):
+            if s1[ind1 - 1] == s2[ind2 - 1]:
+                dp[ind1][ind2] = 1 + dp[ind1 - 1][ind2 - 1]
+            else:
+                dp[ind1][ind2] = 0+max(dp[ind1 - 1][ind2], dp[ind1][ind2 - 1])
 
-        for _ in range(level_size):
-            node = queue.popleft()
+    len_ = dp[n][m]
+    i = n
+    j = m
 
-           # Print the node at the current level
+    index = len_ - 1
+    str_ = ""
+    # for k in range(1,1+len_):
+    #   str_+="$" #dummy string
 
-            for neighbor in graph[node]:
-                if neighbor not in visited:
-                    queue.append(neighbor)  
-                    visited.add(neighbor)# Enqueue neighboring nodes
+    while i > 0 and j > 0:
+        if s1[i - 1] == s2[j - 1]:
+            # str_ = s1[i - 1] + str_[:-1]
+            str_ = s1[i - 1] + str_
+            index -= 1
+            i -= 1
+            j -= 1
+        elif s1[i - 1] > s2[j - 1]:
+            i -= 1
+        else:
+            j -= 1
 
-        print("Level Separator")  # Print a separator between levels
+    print("The Longest Common Subsequence is", str_)
 
 
-# Example usage
-graph = {
-    'A': ['B', 'C'],
-    'B': ['A', 'D', 'E'],
-    'C': ['A', 'F'],
-    'D': ['B'],
-    'E': ['B', 'F'],
-    'F': ['C', 'E']
-}
+def main():
+    s1 = "abcde"
+    s2 = "bdgek"
 
-startNode = 'A'
+    lcs(s1, s2)
 
-print("Printing level by level:")
-printLevelByLevel(graph, startNode)
+
+main()
